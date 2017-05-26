@@ -1,0 +1,64 @@
+sudo apt-get update
+Теперь установим Docker. Добавьте ключ GPG официального репозитория Docker в вашу систему:
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+Добавим репозиторий Docker в список источников пакетов утилиты APT:
+sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+sudo apt-get update
+Убедимся, что мы собираемся установить Docker из репозитория Docker, а не из репозитория по умолчанию Ubuntu 16.04:
+apt-cache policy docker-engine
+В результате вы должны увидеть вывод, похожий на этот:
+Вывод команды apt-cache policy docker-engine
+docker-engine:
+  Installed: (none)
+  Candidate: 1.11.1-0~xenial
+  Version table:
+     1.11.1-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages
+     1.11.0-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages     
+sudo apt-get install -y docker-engine
+Проверим, что процесс запущен:
+sudo systemctl status docker
+
+Для того, чтобы не вводить sudo каждый раз при запуске docker, добавьте имя своего пользователя в группу docker:
+sudo usermod -aG docker $(whoami)
+Если вы хотите добавить произвольного пользователя в группу docker, вы можете указать имя пользователя в явном виде:
+sudo usermod -aG docker username
+
+Шаг 3 — Использование команды Docker
+
+docker [опция] [команда] [аргументы]
+docker docker-subcommand --help
+Для просмотра общей справки Docker используйте следующую команду:
+docker info
+
+Шаг 4 — Работа с образами Docker
+docker run hello-world
+docker search ubuntu
+docker pull ubuntu???
+docker run ubuntu???
+Для просмотра образов, загруженных на вашу машину, введите:
+docker images
+
+Шаг 5 — Запуск контейнера Docker
+docker run -it ubuntu
+
+Шаг 6 — Сохранение изменений в контейнере в образ Docker
+exit
+docker commit -m "What did you do to the image" -a "Author Name" container-id repository/new_image_name
+docker commit -m "added node.js" -a "Sunday Ogwu-Chinuwa" d9b100f2f636 finid/ubuntu-nodejs
+docker images
+
+Шаг 7 — Отображение контейнеров Docker
+docker ps               
+Для просмотра всех контейнеров - и активных, и неактивных, добавьте к этой команде ключ -a:
+docker ps -a
+Для отображения последнего созданного контейнера используйте ключ -l:
+docker ps -l
+Для остановки запущенного контейнера введите:
+docker stop идентификатор-контейнера
+Идентификатор-контейнера можно найти с помощью команды docker ps.
+
+Шаг 8 — Отправка контейнеров Docker в репозиторий Docker
+docker login -u docker-registry-username
+docker push docker-registry-username/docker-image-name
